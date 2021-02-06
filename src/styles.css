@@ -26,6 +26,12 @@ body {
   padding: 5px;
 }
 
+#celsius-link {
+  font-family: "Open Sans Condensed", sans-serif;
+  font-size: 12px;
+  color: gray;
+}
+
 .atualinfo {
   font-family: "Open Sans Condensed", sans-serif;
   text-align: center;
