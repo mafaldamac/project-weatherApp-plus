@@ -35,16 +35,27 @@
                 <div class="col-sm-12 col-md-4">
                     </br>
                     <p id="current-date"></p>
-                    <p id="current-hour">${hours}:${minutes.padStart(2, "0")}</p>
+                    <p id="current-hour"></p>
                 </div>
                 <div class="col-sm-12 col-md-4">
                     <p id="search-city"></p>
-                    <p><i class="fas fa-umbrella"></i> </br> *Take your bff umbrella*</p>
+                    <img src="" alt="" id="icon" class="icon temp" />
+                    <p id="description-weather"></p>
                 </div>
                 <div class="col-sm-12 col-md-4">
                     </br>
-                    <p><a href="#" id="celsius-link">ºC</a></p>
-                    <p id="temp-shown"></p>
+                    <div>
+                        <span id="temp-shown"></span>
+                        <span><a href="#" id="celsius-link">ºC</a></span>
+                    </div>
+                    <div>
+                        <span>Wind speed (Km/h)</span>
+                        <p id="wind-speed"></p>
+                    </div>
+                    <div>
+                        <span>Precipitation %</span>
+                        <p id="precipitation">rain</p>
+                    </div>
                 </div>
             </div>
         </div>
