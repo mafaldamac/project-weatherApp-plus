@@ -22,18 +22,30 @@
         </br>
         <form id="form">
             <input class="form-control" id="search" type="search"
-                placeholder="Write the city name here and press Enter">
+                placeholder="Write the city name here and press Enter key or Search">
+            <input type="submit" class="btn btn-outline-warning" value="Search" id="search-button">
+            </input>
+            <button type="button" class="btn btn-outline-warning" id="current-button">
+                Current Location
+            </button>
         </form>
-        <button type="submit" class="btn btn-outline-warning" id="search-button" form="#search" value="search">
-            Enter
-        </button>
-        <button type="button" class="btn btn-outline-warning" id="current-button">
-            Current Location
-        </button>
         </br>
         <div class="atualinfo">
             <div id="current-info" class="row">
-                LOADING....
+                <div class="col-sm-12 col-md-4">
+                    </br>
+                    <p id="current-date"></p>
+                    <p id="current-hour">${hours}:${minutes.padStart(2, "0")}</p>
+                </div>
+                <div class="col-sm-12 col-md-4">
+                    <p id="search-city"></p>
+                    <p><i class="fas fa-umbrella"></i> </br> *Take your bff umbrella*</p>
+                </div>
+                <div class="col-sm-12 col-md-4">
+                    </br>
+                    <p><a href="#" id="celsius-link">ºC</a></p>
+                    <p id="temp-shown"></p>
+                </div>
             </div>
         </div>
         <h1>

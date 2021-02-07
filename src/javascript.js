@@ -1,6 +1,7 @@
 // date and time - current
 let now = new Date();
 let divCurrentInfo = document.getElementById("current-info");
+let currentHourElement = document.getElementById("current-hour");
 let date = now.getDate();
 let month = now.getMonth();
 let hours = now.getHours();
@@ -29,24 +30,7 @@ let days = [
   "Saturday",
 ];
 let day = days[now.getDay()];
-
-divCurrentInfo.innerHTML = `
- <div class="col-sm-12 col-md-4">
-      </br>
-      <p id="current-date">${day}, ${date} ${monthNames[month]}</p>
-      <p>${hours}:${minutes.padStart(2, "0")}</p>
-  </div>
-  <div class="col-sm-12 col-md-4">
-      <p id="search-city"></p>
-      <p><i class="fas fa-umbrella"></i> </br> *Take your bff umbrella*</p>
-  </div>
-  <div class="col-sm-12 col-md-4">
-      </br>
-      <p><a href="#" id="celsius-link">ºC</a></p>
-      <p id="temp-shown"></p>
-      
-  </div>
-`;
+currentHourElement.innerHTML = `${day}, ${date} ${monthNames[month]}`;
 
 // Real data search console - geolocation
 let apiKey = "be65b4815a4ad8711d696d04653d1f47";
