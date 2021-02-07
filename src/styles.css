@@ -37,8 +37,16 @@ body {
 
 #celsius-link {
   font-family: "Open Sans Condensed", sans-serif;
-  font-size: 15px;
+  font-size: 20px;
   color: gray;
+  text-decoration: none;
+}
+
+#fahrenheit-link {
+  font-family: "Open Sans Condensed", sans-serif;
+  font-size: 20px;
+  color: gray;
+  text-decoration: none;
 }
 
 .atualinfo {
