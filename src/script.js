@@ -1,39 +1,3 @@
-// Date & Time - Atual Info
-let now = new Date();
-let divCurrentInfo = document.getElementById("current-info");
-let currentDateElement = document.getElementById("current-date");
-let currentHourElement = document.getElementById("current-hour");
-let date = now.getDate();
-let month = now.getMonth();
-let hours = now.getHours();
-let minutes = now.getMinutes();
-let monthNames = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-let days = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-let day = days[now.getDay()];
-currentDateElement.innerHTML = `${day}, ${date} ${monthNames[month]}`;
-currentHourElement.innerHTML = `${hours}:${minutes}`;
-
 // APIKEY
 let apiKey = "be65b4815a4ad8711d696d04653d1f47";
 
@@ -50,9 +14,70 @@ function search(event) {
   } else {
     alert("Please write a city to search");
   }
+  function forecastInfo(response) {
+    let forecast = document.querySelector("#forecast-info");
+  }
+  // Forecast
+  apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${searchInput.value}&units=metric&appid=${apiKey}`;
+  axios.get(apiUrl).then(forecastInfo);
+}
+// Date & Time Info
+function dateFormat(timestamp) {
+  let date = new Date(timestamp);
+  let monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  let month = monthNames[date.getMonth()];
+
+  let days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  let day = days[date.getDay()];
+  return ` ${date.getDate()} ${month}, ${day}`;
 }
 
+function hourFormat(timestamp) {
+  let date = new Date(timestamp);
+
+  let hours = date.getHours();
+  if (hours < 10) {
+    hours = `0${hours}`;
+  }
+  let minutes = date.getMinutes();
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
+  }
+  return `${hours}:${minutes}`;
+}
+
+// Searched City
+
 function tempCitySearched(response) {
+  let date = (document.querySelector("#current-date").innerHTML = dateFormat(
+    response.data.dt * 1000
+  ));
+
+  let hour = (document.querySelector("#current-hour").innerHTML = hourFormat(
+    response.data.dt * 1000
+  ));
+
   let city = (document.querySelector("#search-city").innerHTML =
     response.data.name);
 
@@ -66,6 +91,8 @@ function tempCitySearched(response) {
   let wind = (document.querySelector("#wind-speed").innerHTML = Math.round(
     response.data.wind.speed
   ));
+  let humidity = (document.querySelector("#humidity").innerHTML =
+    response.data.main.humidity);
   let icon = document
     .querySelector("#icon")
     .setAttribute(
@@ -93,6 +120,16 @@ function showCelsiusTemperature(event) {
 // Current Location
 
 function locationTemp(response) {
+  let date = (document.querySelector("#current-date").innerHTML = dateFormat(
+    response.data.dt * 1000
+  ));
+
+  let hour = (document.querySelector("#current-hour").innerHTML = hourFormat(
+    response.data.dt * 1000
+  ));
+  let humidity = (document.querySelector("#humidity").innerHTML =
+    response.data.main.humidity);
+
   let cityCurrent = response.data.name;
   let cityCurrentPosition = (document.querySelector(
     "#search-city"
