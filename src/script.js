@@ -1,4 +1,4 @@
-// dDate & Time - Atual Info
+// Date & Time - Atual Info
 let now = new Date();
 let divCurrentInfo = document.getElementById("current-info");
 let currentDateElement = document.getElementById("current-date");
@@ -79,23 +79,25 @@ function tempCitySearched(response) {
 function showFahrTemperature(event) {
   event.preventDefault();
   let fahrTemperature = (celsiusTemp * 9) / 5 + 32;
-  let tempElement = document.querySelector("#temp-shown");
-  const val = Math.round(fahrTemperature);
-  tempElement.innerHTML = Math.round(fahrTemperature) + "";
+  let tempElement = (document.querySelector("#temp-shown").innerHTML =
+    Math.round(fahrTemperature) + "");
 }
 
 function showCelsiusTemperature(event) {
   event.preventDefault();
-  let tempElement = document.querySelector("#temp-shown");
-  tempElement.innerHTML = Math.round(celsiusTemp);
+  let tempElement = (document.querySelector(
+    "#temp-shown"
+  ).innerHTML = Math.round(celsiusTemp));
 }
 
 // Current Location
 
 function locationTemp(response) {
-  let cityCurrentPosition = document.querySelector("#search-city");
   let cityCurrent = response.data.name;
-  cityCurrentPosition.innerHTML = cityCurrent;
+  let cityCurrentPosition = (document.querySelector(
+    "#search-city"
+  ).innerHTML = cityCurrent);
+
   let temperatureCurrentPosition = document.querySelector("#temp-shown");
   let temperatureCurrent = Math.round(response.data.main.temp);
   celsiusTemp = temperatureCurrent;
@@ -125,14 +127,14 @@ function getCurrentPosition() {
   navigator.geolocation.getCurrentPosition(currentLocation);
 }
 
+// Runnings
+
 let button = document.querySelector("#current-button");
 button.addEventListener("click", getCurrentPosition);
 
 let celsiusTemp = null;
 let form = document.getElementById("form");
 form.addEventListener("submit", search);
-
-/////
 
 let fahrenheit = document.querySelector("#fahrenheit-link");
 fahrenheit.addEventListener("click", showFahrTemperature);
