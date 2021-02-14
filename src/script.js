@@ -14,10 +14,8 @@ function search(event) {
   } else {
     alert("Please write a city to search");
   }
-  function forecastInfo(response) {
-    let forecast = document.querySelector("#forecast-info");
-  }
-  // Forecast
+
+  // Forecast API
   apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${searchInput.value}&units=metric&appid=${apiKey}`;
   axios.get(apiUrl).then(forecastInfo);
 }
@@ -101,6 +99,93 @@ function tempCitySearched(response) {
     );
 }
 
+// Forecast by HOURS
+
+function forecastInfoHours(response) {
+  let forecastElement = document.querySelector("#forecast-info");
+  forecastElement.innerHTML = null;
+  let forecast = null;
+
+  for (let index = 0; index < 6; index++) {
+    let date = response.data.list[index].dt;
+    let tempCelMax = Math.round(response.data.list[index].main.temp_max);
+    let tempCelMin = Math.round(response.data.list[index].main.temp_min);
+    let tempFarMax = Math.round((tempCelMax * 9) / 5 + 32);
+    let tempFarMin = Math.round((tempCelMin * 9) / 5 + 32);
+    let iconForecast = response.data.list[index].weather[0].icon;
+    let forecastDescription = response.data.list[index].weather[0].description;
+    forecastElement.innerHTML += `
+  <div class="col-sm-12 col-md-2 container-border me-1">
+    <p>${hourFormat(date * 1000, 0)}</p>
+    <img src="http://openweathermap.org/img/wn/${iconForecast}@2x.png}" id="icon-forecast" class="icon temp" />
+    <p> ${tempCelMax}ºC Max / ${tempCelMin}ºC Min </br> ${tempFarMax}ºF Max / ${tempFarMin}ºF Min </p>
+    <p>${forecastDescription}</p>
+
+  </div>
+  `;
+  }
+}
+
+// Forecast by DAYS
+
+function forecastInfoDays(response) {
+  let forecastElement = document.querySelector("#forecast-info");
+  forecastElement.innerHTML = null;
+  for (let index = 0; index < 40; index++) {
+    let date = response.data.list[index].dt;
+    let tempCelMax = Math.round(response.data.list[index].main.temp_max);
+    let tempCelMin = Math.round(response.data.list[index].main.temp_min);
+    let tempFarMax = Math.round((tempCelMax * 9) / 5 + 32);
+    let tempFarMin = Math.round((tempCelMin * 9) / 5 + 32);
+    let iconForecast = response.data.list[index].weather[0].icon;
+    let forecastDescription = response.data.list[index].weather[0].description;
+    forecastElement.innerHTML += `
+  <div class="col-sm-12 col-md-2 container-border me-1">
+    <p>${dateFormat(date * 1000, 0)}</p>
+    <img src="http://openweathermap.org/img/wn/${iconForecast}@2x.png}" id="icon-forecast" class="icon temp" />
+    <p> ${tempCelMax}ºC Max / ${tempCelMin}ºC Min </br> ${tempFarMax}ºF Max / ${tempFarMin}ºF Min </p>
+    <p>${forecastDescription}</p>
+
+  </div>
+  `;
+  }
+}
+
+// Button Forecast Days & Hours
+
+let currentInfoForecast = 1; // 1 = hours & 0 = days
+let currentLocation = 0; // 0 = current city & 1 = search city
+
+function changeForecastInfo(event) {
+  event.preventDefault();
+
+  let forecastButton = document.querySelector("#forecast-button");
+  if (currentInfoForecast === 0) {
+    forecastButton.innerHTML = `Info by Hours`;
+
+    if (currentLocation === 0) {
+      let urlForecast = `https://api.openweathermap.org/data/2.5/forecast?appid=${apiKey}&units=metrics&lat=${latitude}&lon=${longitude}`;
+      axios.get(urlForecast).then(forecastInfoDays);
+    } else {
+      let urlForecast = `https://api.openweathermap.org/data/2.5/forecast?appid=${apiKey}&units=metrics&q=${searchInput.value}`;
+      axios.get(urlForecast).then(forecastInfoDays);
+    }
+  }
+
+  if (currentInfoForecast === 1) {
+  } else {
+    forecastButton.innerHTML = `Info by Days`;
+
+    if (currentLocation === 0) {
+      let urlForecast = `https://api.openweathermap.org/data/2.5/forecast?appid=${apiKey}&units=metrics&lat=${latitude}&lon=${longitude}`;
+      axios.get(urlForecast).then(forecastInfoHours);
+    } else {
+      let urlForecast = `https://api.openweathermap.org/data/2.5/forecast?appid=${apiKey}&units=metrics&q=${searchInput.value}`;
+      axios.get(urlForecast).then(forecastInfoHours);
+    }
+  }
+}
+
 // Temperature Units
 
 function showFahrTemperature(event) {
@@ -178,3 +263,6 @@ fahrenheit.addEventListener("click", showFahrTemperature);
 
 let celsius = document.querySelector("#celsius-link");
 celsius.addEventListener("click", showCelsiusTemperature);
+
+let forecastButton = document.querySelector("#forecast-button");
+forecastButton.addEventListener("click", changeForecastInfo);

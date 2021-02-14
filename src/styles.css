@@ -35,6 +35,15 @@ body {
   padding: 5px;
 }
 
+#forecast-button {
+  font-family: "Open Sans Condensed", sans-serif;
+  font-size: 18px;
+  color: gray;
+  text-align: center;
+  margin: 3% auto;
+  padding: 5px;
+}
+
 #celsius-link {
   font-family: "Open Sans Condensed", sans-serif;
   font-size: 20px;
