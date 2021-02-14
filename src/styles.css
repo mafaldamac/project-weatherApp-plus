@@ -4,17 +4,69 @@ body {
   min-height: 100vh;
 }
 
+h1 {
+  font-family: "Open Sans Condensed", sans-serif;
+  font-size: 35px;
+  font-weight: bold;
+  text-align: center;
+  margin: 5px;
+  padding: 5px;
+}
+
+footer {
+  font-family: "Open Sans Condensed", sans-serif;
+  text-align: center;
+  font-weight: bold;
+  font-size: 15px;
+}
+
 .container {
   text-align: center;
   display: block;
+}
+
+.atualinfo {
+  font-family: "Open Sans Condensed", sans-serif;
+  text-align: center;
+  font-weight: bold;
+  font-size: 25px;
+  border: 2px solid #cdac81;
+  box-shadow: 5px 5px #e7e7de;
+}
+
+.container-border {
+  border: 2px solid #cdac81;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 3px;
+  text-align: center;
+  box-shadow: 5px 5px #e7e7de;
+}
+
+.row {
+  font-family: "Open Sans Condensed", sans-serif;
+  font-weight: bold;
+  padding: 10px;
+  margin: 10px;
+}
+
+.wind-temps {
+  font-family: "Open Sans Condensed", sans-serif;
+  font-size: 20px;
+  color: gray;
+}
+
+.hum-temps {
+  font-family: "Open Sans Condensed", sans-serif;
+  font-size: 20px;
+  color: gray;
 }
 
 #search {
   font-family: "Open Sans Condensed", sans-serif;
   font-size: 18px;
   text-align: center;
-  margin: 0% auto;
-  padding: 5px;
+  margin: 1% auto;
 }
 
 #current-button {
@@ -22,8 +74,7 @@ body {
   font-size: 18px;
   color: gray;
   text-align: center;
-  margin: 3% auto;
-  padding: 5px;
+  margin: 1% auto;
 }
 
 #search-button {
@@ -31,8 +82,7 @@ body {
   font-size: 18px;
   color: gray;
   text-align: center;
-  margin: 3% auto;
-  padding: 5px;
+  margin: 0% auto;
 }
 
 #forecast-button {
@@ -40,8 +90,7 @@ body {
   font-size: 18px;
   color: gray;
   text-align: center;
-  margin: 3% auto;
-  padding: 5px;
+  margin: 0% auto;
 }
 
 #celsius-link {
@@ -58,72 +107,9 @@ body {
   text-decoration: none;
 }
 
-.atualinfo {
-  font-family: "Open Sans Condensed", sans-serif;
-  text-align: center;
-  font-weight: bold;
-  font-size: 25px;
-  border: 2px solid #cdac81;
-  padding: 10px;
-  box-shadow: 5px 5px #e7e7de;
-}
-
-h1 {
-  font-family: "Open Sans Condensed", sans-serif;
-  font-size: 35px;
-  font-weight: bold;
-  text-align: center;
-  margin: 15px;
-  padding: 5px;
-}
-
-.container-border {
-  border: 2px solid #cdac81;
-  border-radius: 5px;
-  padding: 10px;
-  margin: 6px;
-  text-align: center;
-  box-shadow: 5px 5px #e7e7de;
-}
-
-.row {
-  font-family: "Open Sans Condensed", sans-serif;
-  font-weight: bold;
-}
-
-.fa-umbrella {
-  font-size: 30px;
-  color: purple;
-}
-
-.fa-smog {
-  font-size: 30px;
-  color: gray;
-}
-
-.fa-bolt {
-  font-size: 30px;
-  color: gold;
-}
-
-.fa-cloud-rain {
-  font-size: 30px;
-  color: aqua;
-}
-
-.fa-cloud-sun {
-  font-size: 30px;
-  color: orange;
-}
-
-.fa-cloud {
-  font-size: 30px;
-  color: whitesmoke;
-}
-
-footer {
-  font-family: "Open Sans Condensed", sans-serif;
-  text-align: center;
-  font-weight: bold;
-  font-size: 15px;
+#forecast-info {
+  grid-template-columns: 1fr;
+  grid-template-rows: 1fr;
+  align-items: center;
+  justify-content: center;
 }

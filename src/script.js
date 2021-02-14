@@ -5,10 +5,14 @@ let apiKey = "be65b4815a4ad8711d696d04653d1f47";
 let currentInfoForecast = 1; // 1 = hours & 0 = days
 let currentLocation = 0; // 0 = current city & 1 = search city
 
+let lastCurrentLocation;
+
 // Search Form
-function search(event) {
+function search(event = {}) {
   currentLocation = 1; // 0 = current city & 1 = search city
-  event.preventDefault();
+  if (event.preventDefault) {
+    event.preventDefault();
+  }
   let searchInput = document.querySelector("#search");
 
   let city = document.querySelector("#search-city");
@@ -19,10 +23,6 @@ function search(event) {
   } else {
     alert("Please write a city to search");
   }
-
-  // Forecast API
-  apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${searchInput.value}&units=metric&appid=${apiKey}`;
-  axios.get(apiUrl).then(forecastInfoHours);
 }
 // Date & Time Info
 function dateFormat(timestamp) {
@@ -104,30 +104,39 @@ function tempCitySearched(response) {
         "src",
         `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
       );
+    // Forecast API
+    lastCurrentLocation = {
+      coords: {
+        latitude: response.data.coord.lat,
+        longitude: response.data.coord.lon,
+      },
+    };
+    apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${response.data.coord.lat}&lon=${response.data.coord.lon}&units=metric&appid=${apiKey}`;
+    axios.get(apiUrl).then(forecastInfoHours);
   }
 }
 
 // Forecast by HOURS
 
 function forecastInfoHours(response) {
-  currentInfoForecast = 1; // 1 = hours & 0 = days
+  currentInfoForecast = 0; // 1 = hours & 0 = days
   let forecastElement = document.querySelector("#forecast-info");
   forecastElement.innerHTML = null;
   let forecast = null;
 
-  for (let index = 0; index < 6; index++) {
-    let date = response.data.list[index].dt;
-    let tempCelMax = Math.round(response.data.list[index].main.temp_max);
-    let tempCelMin = Math.round(response.data.list[index].main.temp_min);
-    let tempFarMax = Math.round((tempCelMax * 9) / 5 + 32);
-    let tempFarMin = Math.round((tempCelMin * 9) / 5 + 32);
-    let iconForecast = response.data.list[index].weather[0].icon;
-    let forecastDescription = response.data.list[index].weather[0].description;
+  for (let index = 0; index < 5; index++) {
+    let date = response.data.hourly[index].dt;
+    let tempCel = Math.round(response.data.hourly[index].temp);
+    let tempFar = Math.round((tempCel * 9) / 5 + 32);
+    let iconForecast = response.data.hourly[index].weather[0].icon;
+    let forecastDescription =
+      response.data.hourly[index].weather[0].description;
     forecastElement.innerHTML += `
-  <div class="col-sm-12 col-md-2 container-border me-1">
+    
+  <div class="col-sm-6 col-md-2 container-border me-1">
     <p>${hourFormat(date * 1000, 0)}</p>
-    <img src="http://openweathermap.org/img/wn/${iconForecast}@2x.png}" id="icon-forecast" class="icon temp" />
-    <p> ${tempCelMax}ºC Max / ${tempCelMin}ºC Min </br> ${tempFarMax}ºF Max / ${tempFarMin}ºF Min </p>
+    <img src="http://openweathermap.org/img/wn/${iconForecast}@2x.png" id="icon-forecast" class="icon temp" />
+    <p> ${tempCel}ºC Max </br> ${tempFar}ºF</p>
     <p>${forecastDescription}</p>
 
   </div>
@@ -138,21 +147,22 @@ function forecastInfoHours(response) {
 // Forecast by DAYS
 
 function forecastInfoDays(response) {
-  currentInfoForecast = 0; // 1 = hours & 0 = days
+  currentInfoForecast = 1; // 1 = hours & 0 = days
   let forecastElement = document.querySelector("#forecast-info");
-  forecastElement.innerHTML = null;
-  for (let index = 0; index < 40; index++) {
-    let date = response.data.list[index].dt;
-    let tempCelMax = Math.round(response.data.list[index].main.temp_max);
-    let tempCelMin = Math.round(response.data.list[index].main.temp_min);
+  forecastElement.innerHTML = "";
+  for (let index = 1; index < 6; index++) {
+    let date = response.data.daily[index].dt;
+    let tempCelMax = Math.round(response.data.daily[index].temp.max);
+    let tempCelMin = Math.round(response.data.daily[index].temp.min);
     let tempFarMax = Math.round((tempCelMax * 9) / 5 + 32);
     let tempFarMin = Math.round((tempCelMin * 9) / 5 + 32);
-    let iconForecast = response.data.list[index].weather[0].icon;
-    let forecastDescription = response.data.list[index].weather[0].description;
+    let iconForecast = response.data.daily[index].weather[0].icon;
+    let forecastDescription = response.data.daily[index].weather[0].description;
+    const aux = new Date(date * 1000);
     forecastElement.innerHTML += `
   <div class="col-sm-12 col-md-2 container-border me-1">
     <p>${dateFormat(date * 1000, 0)}</p>
-    <img src="http://openweathermap.org/img/wn/${iconForecast}@2x.png}" id="icon-forecast" class="icon temp" />
+    <img src="http://openweathermap.org/img/wn/${iconForecast}@2x.png" id="icon-forecast" class="icon temp" />
     <p> ${tempCelMax}ºC Max / ${tempCelMin}ºC Min </br> ${tempFarMax}ºF Max / ${tempFarMin}ºF Min </p>
     <p>${forecastDescription}</p>
 
@@ -166,28 +176,31 @@ function forecastInfoDays(response) {
 function changeForecastInfo(event) {
   event.preventDefault();
 
-  let searchInput = document.querySelector("#search");
   let forecastButton = document.querySelector("#forecast-button");
+  let latitude = lastCurrentLocation.coords.latitude;
+  let longitude = lastCurrentLocation.coords.longitude;
   if (currentInfoForecast === 0) {
-    forecastButton.innerHTML = `Info by Hours`;
+    forecastButton.innerHTML = `To see the forecast by hours click here!`;
 
     if (currentLocation === 0) {
-      let urlForecast = `https://api.openweathermap.org/data/2.5/forecast?appid=${apiKey}&units=metrics&lat=${latitude}&lon=${longitude}`;
+      let urlForecast = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
       axios.get(urlForecast).then(forecastInfoDays);
     } else {
-      let urlForecast = `https://api.openweathermap.org/data/2.5/forecast?appid=${apiKey}&units=metrics&q=${searchInput.value}`;
+      let urlForecast = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
       axios.get(urlForecast).then(forecastInfoDays);
     }
   }
 
   if (currentInfoForecast === 1) {
-    forecastButton.innerHTML = `Info by Days`;
+    forecastButton.innerHTML = `To see the forecast by days click here!`;
 
     if (currentLocation === 0) {
-      let urlForecast = `https://api.openweathermap.org/data/2.5/forecast?appid=${apiKey}&units=metrics&lat=${latitude}&lon=${longitude}`;
+      let latitude = lastCurrentLocation.coords.latitude;
+      let longitude = lastCurrentLocation.coords.longitude;
+      let urlForecast = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
       axios.get(urlForecast).then(forecastInfoHours);
     } else {
-      let urlForecast = `https://api.openweathermap.org/data/2.5/forecast?appid=${apiKey}&units=metrics&q=${searchInput.value}`;
+      let urlForecast = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
       axios.get(urlForecast).then(forecastInfoHours);
     }
   }
@@ -249,10 +262,11 @@ function currentLocationFunc(position) {
   currentLocation = 0; // 0 = current city & 1 = search city
   let latitude = position.coords.latitude;
   let longitude = position.coords.longitude;
+  lastCurrentLocation = position;
   let apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
   axios.get(apiUrl).then(locationTemp);
 
-  apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${searchInput.value}&units=metric&appid=${apiKey}`;
+  apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${latitude}&lon=${longitude}&units=metric&appid=${apiKey}`;
   axios.get(apiUrl).then(forecastInfoHours);
 }
 
@@ -277,3 +291,8 @@ celsius.addEventListener("click", showCelsiusTemperature);
 
 let forecastButton = document.querySelector("#forecast-button");
 forecastButton.addEventListener("click", changeForecastInfo);
+
+//
+document.querySelector("#search").value = "Lisbon";
+
+search();
